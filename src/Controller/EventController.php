@@ -98,10 +98,10 @@ class EventController extends AbstractController
     return $this->redirectToRoute('event');
   }
 
-  #[Route('/{type}', name: 'filter')]
+  #[Route('type/{type}', name: 'filter')]
   public function filter(ManagerRegistry $doctrine, $type): Response
   {
-    $event = $doctrine->getRepository(Events::class)->findBy(['type' => '$type']);
+    $events = $doctrine->getRepository(Events::class)->findBy(['type' => $type]);
     return $this->render('event/index.html.twig', ['events' => $events]);
   }
 }
