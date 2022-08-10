@@ -12,30 +12,30 @@ use App\Form\TodoType;
 
 
 
-class TodoController extends AbstractController
+class EventController extends AbstractController
 {
-  #[Route('/', name: 'todo')]
+  #[Route('/', name: 'event')]
   public function index(ManagerRegistry $doctrine): Response
   {
-    $todos = $doctrine->getRepository(Events::class)->findAll();
-    return $this->render('todo/index.html.twig', ['todos' => $todos]);
+    $events = $doctrine->getRepository(Events::class)->findAll();
+    return $this->render('event/index.html.twig', ['events' => $events]);
   }
 
-  #[Route('/create', name: 'todo_create')]
+  #[Route('/create', name: 'event_create')]
   public function create(Request $request, ManagerRegistry $doctrine): Response
   {
-      $todo = new events();
-      $form = $this->createForm(TodoType::class, $todo);
+      $event = new events();
+      $form = $this->createForm(TodoType::class, $event);
 
       $form->handleRequest($request);
 
       if ($form->isSubmitted() && $form->isValid()) {
           $now = new \DateTime('now');
 
-          $todo = $form->getData();
-          $todo->setDate($now);  
+          $event = $form->getData();
+          $event->setDate($now);  
           $em = $doctrine->getManager();
-          $em->persist($todo);
+          $em->persist($event);
           $em->flush();
 
           $this->addFlash(
@@ -43,65 +43,65 @@ class TodoController extends AbstractController
               'Event Added'
               );
     
-          return $this->redirectToRoute('todo');
+          return $this->redirectToRoute('event');
       }
 
-      return $this->render('todo/create.html.twig', ['form' => $form->createView()]);
+      return $this->render('event/create.html.twig', ['form' => $form->createView()]);
   }
 
 
-  #[Route('/edit/{id}', name: 'todo_edit')]
+  #[Route('/edit/{id}', name: 'event_edit')]
   public function edit(Request $request, ManagerRegistry $doctrine, $id): Response
   {
-      $todo = $doctrine->getRepository(events::class)->find($id);
-      $form = $this->createForm(TodoType::class, $todo);
+      $events = $doctrine->getRepository(Events::class)->find($id);
+      $form = $this->createForm(ToDoType::class, $events);
       $form->handleRequest($request);
 
       if ($form->isSubmitted() && $form->isValid()) {
           $now = new \DateTime('now');
-          $todo = $form->getData();
-          $todo->setDate($now);
+          $event = $form->getData();
+          $event->setDate($now);
           $em = $doctrine->getManager();
-          $em->persist($todo);
+          $em->persist($event);
           $em->flush();
           $this->addFlash(
                'notice',
                'Event Edited'
                );
 
-          return $this->redirectToRoute('todo');
+          return $this->redirectToRoute('event');
       }
 
-      return $this->render('todo/edit.html.twig', ['form' => $form->createView()]);
+      return $this->render('event/edit.html.twig', ['form' => $form->createView()]);
   }
 
-  #[Route('/details/{id}', name: 'todo_details')]
+  #[Route('/details/{id}', name: 'event_details')]
   public function details(ManagerRegistry $doctrine, $id): Response
   {
-      $todo = $doctrine->getRepository(events::class)->find($id);
+      $event = $doctrine->getRepository(events::class)->find($id);
 
-      return $this->render('todo/details.html.twig', ['todo' => $todo]);
+      return $this->render('event/details.html.twig', ['event' => $event]);
   }
 
   
-  #[Route('/delete/{id}', name: 'todo_delete')]   
+  #[Route('/delete/{id}', name: 'event_delete')]   
   public function delete($id, ManagerRegistry $doctrine): Response    
   {
-  $todo = $doctrine->getRepository(events::class)->find($id);
+  $event = $doctrine->getRepository(events::class)->find($id);
   $em= $doctrine->getManager();        
-  $em->remove($todo);        
+  $em->remove($event);        
   $em->flush();        
   $this->addFlash(
     'notice',
     'Event deleted'
     );               
-    return $this->redirectToRoute('todo');
+    return $this->redirectToRoute('event');
   }
 
   #[Route('/{type}', name: 'filter')]
   public function filter(ManagerRegistry $doctrine, $type): Response
   {
-    $todos = $doctrine->getRepository(Events::class)->findBy(['type' => '$type']);
-    return $this->render('todo/index.html.twig', ['todos' => $todos]);
+    $event = $doctrine->getRepository(Events::class)->findBy(['type' => '$type']);
+    return $this->render('event/index.html.twig', ['events' => $events]);
   }
 }

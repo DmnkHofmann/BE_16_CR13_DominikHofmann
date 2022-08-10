@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\events;
+use App\Entity\Events;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\AbstractType;
@@ -60,7 +60,7 @@ class TodoType extends AbstractType
   public function configureOptions(OptionsResolver $resolver): void
   {
       $resolver->setDefaults([
-          'data_class' => events::class,
+          'data_class' => Events::class,
       ]);
   }
 }
